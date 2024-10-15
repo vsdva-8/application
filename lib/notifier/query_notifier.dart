@@ -1,7 +1,7 @@
 import 'package:anime_more/entity/anime_query.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../entity/sorting.dart';
+import '../entity/setting_params.dart';
 
 class QueryNotifier extends StateNotifier<Map<String, String>> {
   QueryNotifier() : super(AnimeQuery.query);
@@ -51,5 +51,27 @@ class QueryNotifier extends StateNotifier<Map<String, String>> {
         // TODO: Handle this case.
     }
     state = newQuery;
+  }
+
+  getSetting(SettingOption type){
+    switch(type){
+      case SettingOption.ratingSorting:
+        if(state.containsKey('sort')){
+          final sorting=state['sort']!.split(',');
+          for (var value in sorting) {
+            switch(value){
+              case 'averageRating':
+                return Sorting.ascending;
+              case '-averageRating':
+                return Sorting.descending;
+              default:
+                return Sorting.empty;
+            }
+          }
+        }
+        else{
+          return Sorting.empty;
+        }
+    }
   }
 }
